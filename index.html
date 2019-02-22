@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en-us">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Unity WebGL Player | DBio</title>
+		<link rel="stylesheet" href="TemplateData/style.css">
+		<link rel="shortcut icon" href="TemplateData/favicon.ico" />
+		<script>
+            console.log("hello");
+			function initializeConnection(){console.log('init')}
+			window.checkpointReached = function(slug, id) {}
+			window.sendVoltage = function(mv) {}
+			window.getName = function(bool) {}
+			window.showGraph = function(graph) {}
+			window.logEvent = function(event){}
+			window.getName = function(name){}
+            
+            function send_action_potential()
+            {
+                console.log("sending AP");
+                //SendMessage('MyGameObject', 'ReceiveAction', {"actionType":"ReachThreshold"});
+            }
+            
+		</script>
+		<script src="/socket.io/socket.io.js"></script>
+<script src="/static/socks.js"></script>
+<script>
+  if (window.tellServer == undefined){
+	window.tellServer = function(evt, action){
+	  console.log(evt);console.log(action);
+	}
+  }
+</script>
+		<script type="text/javascript" src="https://code.createjs.com/tweenjs-0.6.1.min.js"></script>
+		<script type="text/javascript" src="TemplateData/CSSPlugin.js"></script>
+		<script src="TemplateData/UnityProgress.js"></script>
+	</head>
+    <button onclick="send_action_potential()">Send AP</button> 
+	<body class="template">
+		<div class="template-wrap clear">
+			<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" height="600px" width="960px"></canvas>
+		</div>
+		<div id="loadingBox">
+            <div id="loadingMsg"></div>
+			<div id="bgBar"></div>
+			<div id="progressBar"></div>
+			<img id="spinner" src="TemplateData/spinner.gif" style="display: none; margin: 0 auto" />
+			<p id="loadingInfo">Loading...</p>
+		</div>
+		<script type='text/javascript'>
+  var Module = {
+    TOTAL_MEMORY: 536870912,
+    errorhandler: null,			// arguments: err, url, line. This function must return 'true' if the error is handled, otherwise 'false'
+    compatibilitycheck: null,
+    dataUrl: "Release/NeuronSim.data",
+    codeUrl: "Release/NeuronSim.js",
+    memUrl: "Release/NeuronSim.mem",
+  };
+</script>
+<script src="Release/UnityLoader.js"></script>
+
+	</body>
+</html>
