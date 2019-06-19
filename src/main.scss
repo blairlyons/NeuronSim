@@ -1,0 +1,119 @@
+$green:rgba(186, 227, 210, 1);
+$dark-blue:#06042c;
+$pink:#E3C8F0;
+
+body{
+	background-color: $dark-blue;
+	margin:0;
+	padding:0;
+	// width:100%;
+    font-size: 20px;
+	font-family: "mr-eaves-modern", Open Sans;
+	font-weight: 300;
+	text-align: left;
+	color: #C9DCF2;
+
+}
+
+
+h1{
+  font-family: "mr-eaves-modern", Open Sans;
+  font-weight: 200;
+  font-size: 200%;
+
+  color: $green;
+ 	// color: rgba(20,60,85,1);
+  padding:0;
+  margin:0;
+
+}
+
+h2{
+
+  font-family:"mr-eaves-modern", Open Sans Condensed;
+
+  font-weight: 300;
+  font-size: 2.2em;
+  padding: 0;
+  margin:0;
+  color:$pink;
+}
+
+h1, h2, h3, h4{
+
+}
+
+$panel-shadow: 3px 3px 20px rgba(0,0,0,0.25);
+
+
+
+
+#graph{
+	width:350px;
+	height:200px;
+	position:absolute;
+	right:5%;
+	top:45px;
+	background-color: rgba(255,255,255,1);
+	box-shadow: $panel-shadow;
+}
+
+.line {
+	fill: none;
+	stroke:#FF3D61FF;
+	stroke-width: 2px;
+ }
+
+
+
+main{
+	position: absolute;
+	width:100%;
+
+	top:0;
+	text-align: center;
+	z-index: 100;
+}
+
+.buttons{
+	// position: absolute;
+	display: flex;
+	flex-direction: row;
+	margin-left:180px;
+	margin-top:25px;
+	// left:10%;
+	// align-items: left;
+}
+
+button{
+	// width:100px;
+	// height:45px;
+	border:1px solid #A9DCE065;
+	margin-right: 20px;
+	padding:12px 15px;
+	background-color: rgba(0,62,105,1);
+	font-size:16px;
+	color:white;
+	cursor: pointer;
+}
+
+canvas { 
+	width: 95%; 
+	height: 80%; 
+    left: 25px;
+    right: 25px;
+    top:100px;
+	position: absolute; 
+}
+
+#logo{
+	position: absolute;
+	width:120px;
+	left:0;
+	top:0;
+	padding:10px;
+
+	img{
+		width:100%;
+	}
+}

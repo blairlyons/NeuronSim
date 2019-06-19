@@ -1,157 +1,167 @@
 <!doctype html>
 <html lang="en-us">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>Unity WebGL Player | DBio</title>
-		<link rel="stylesheet" href="TemplateData/style.css">
-		<link rel="shortcut icon" href="TemplateData/favicon.ico" />
-        <style> /* set the CSS */
 
-        .line {
-          fill: none;
-          stroke: steelblue;
-          stroke-width: 2px;
-        }
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@dynamoidapps">
+	<meta name="twitter:creator" content="@dynamoidapps">
+	<meta name="twitter:title" content="Neuron electrical signaling simulation">
+	<meta name="twitter:description" content="Fire a neuron and watch the electrochemical dynamics - a recently-revamped simulation created by Dynamoid. ">
+	<meta name="twitter:image" content="http://dynamoid.com/NeuronSim/twitter_card.png">
 
-        </style>
-        <script src="https://d3js.org/d3.v4.min.js"></script>
-		<script>
-            function sendActionPotential()
-            {
-                SendMessage('Networking', 'ReceiveAction', JSON.stringify({ 
-                    "environment":"all", 
-                    "actionType":"ReachThreshold" 
-                }) );
-            }
-			function initializeConnection(){console.log('init')}
-			window.checkpointReached = function(slug, id) {}
-			window.sendVoltage = function(mv) // receive voltage
-            {
-                voltage_data["data"].push({
-                        "Time": t,
-                        "Voltage": parseFloat(mv)
-                    });
-                draw(voltage_data);
-                t++;
-                console.log(voltage_data);
-            }
-			window.getName = function(bool) {}
-			window.showGraph = function(graph) {}
-			window.logEvent = function(event){}
-			window.getName = function(name){}
-		</script>
-		<script src="/socket.io/socket.io.js"></script>
-<script src="/static/socks.js"></script>
-<script>
-  if (window.tellServer == undefined){
-	window.tellServer = function(evt, action){
-	  console.log(evt);console.log(action);
-	}
-  }
-</script>
-		<script type="text/javascript" src="https://code.createjs.com/tweenjs-0.6.1.min.js"></script>
-		<script type="text/javascript" src="TemplateData/CSSPlugin.js"></script>
-		<script src="TemplateData/UnityProgress.js"></script>
-	</head>
-	<body class="template">
-		<div class="template-wrap clear">
-			<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" height="600px" width="960px">
-            </canvas>
-            <div id="graph" style="width:350px;height:200px;position:absolute;right:18%;bottom:18%;background-color: rgba(255,255,255,0.5)">
-                <button onclick="sendActionPotential()" style="width:100px;height:50px;position:absolute;right:0%;top:0%;background-color: rgba(0,62,105,1);font-size:16px;color:white">Stimulate</button> 
-            </div>
-            
-		</div>
-		<div id="loadingBox">
-            <div id="loadingMsg"></div>
-			<div id="bgBar"></div>
-			<div id="progressBar"></div>
-			<img id="spinner" src="TemplateData/spinner.gif" style="display: none; margin: 0 auto" />
-			<p id="loadingInfo">Loading...</p>
-		</div>
-		<script type='text/javascript'>
-  var Module = {
-    TOTAL_MEMORY: 536870912,
-    errorhandler: null,			// arguments: err, url, line. This function must return 'true' if the error is handled, otherwise 'false'
-    compatibilitycheck: null,
-    dataUrl: "Release/NeuronSim.data",
-    codeUrl: "Release/NeuronSim.js",
-    memUrl: "Release/NeuronSim.mem",
-  };
-</script>
-<script src="Release/UnityLoader.js"></script>
-        <!-- load the d3.js library -->    	
-        <script src="https://d3js.org/d3.v4.min.js"></script>
-        <script>
 
-                    // GRAPH ---------------------------
-                    // data
-                    var t = 0;
-                    var voltage_data = {
-                        "data":[
-                            {
-                                "Time": 0,
-                                "Voltage": 0
-                            }
-                        ]
-                    };
+	<title>Neuron simulation</title>
+	<link rel="stylesheet" href="TemplateData/style.css">
+	<link rel="stylesheet" href="dist/style.css">
+	<link rel="shortcut icon" href="TemplateData/favicon.ico" />
+	
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	
+	
+	<script>
+		
+		
+		function initializeConnection() { console.log('init') }
+		window.checkpointReached = function (slug, id) { }
+		window.sendVoltage = function (mv) // receive voltage
+		{
+			voltage_data["data"].push({
+				"Time": t,
+				"Voltage": parseFloat(mv)
+			});
+			draw(voltage_data);
+			t++;
+			
+			if(voltage_data["data"].length > 90){
+				voltage_data["data"].shift();
+			}
+			// console.log(voltage_data);
+		}
+		window.getName = function (bool) { }
+		// window.showGraph = function (graph) { }
+		window.logEvent = function (event) { }
+		window.getName = function (name) { }
 
-                    // set the dimensions and margins of the graph
-                    var margin = {top: 20, right: 20, bottom: 30, left: 50},
-                        width = 350 - margin.left - margin.right,
-                        height = 200 - margin.top - margin.bottom;
 
-                    // set the ranges
-                    var x = d3.scaleLinear().range([0, width]);
-                    var y = d3.scaleLinear().range([height, 0]);
+		// GRAPH ---------------------------
+		// data
+		var t = 0;
+		var voltage_data = {
+			"data": [
+				{
+					"Time": 0,
+					"Voltage": 0
+				}
+			]
+		};
 
-                    // define the line
-                    var valueline = d3.line()
-                        .x(function(d) { return x(d.Time); })
-                        .y(function(d) { return y(d.Voltage); });
+		// set the dimensions and margins of the graph
+		var margin = { top: 20, right: 20, bottom: 30, left: 50 },
+			width = 350 - margin.left - margin.right,
+			height = 200 - margin.top - margin.bottom;
 
-                    function draw(data) {
-                      var data = data["data"];
+		// set the ranges
+		var x = d3.scaleLinear().range([0, width]);
+		var y = d3.scaleLinear().range([height, 0]);
 
-                      // format the data
-                      data.forEach(function(d) {
-                          d.Time = +d.Time;
-                          d.Voltage = +d.Voltage;
-                      });
+		// define the line
+		var valueline = d3.line()
+			.x(function (d) { return x(d.Time); })
+			.y(function (d) { return y(d.Voltage); });
 
-                      // Scale the range of the data
-                      x.domain(d3.extent(data, function(d) { return d.Time; }));
-                      y.domain(d3.extent(data, function(d) { return d.Voltage; }));
-                        
-                      d3.select("svg").remove();
-                        // append the svg obgect to the body of the page
-                        // appends a 'group' element to 'svg'
-                        // moves the 'group' element to the top left margin
-                        var svg = d3.select("#graph").append("svg")
-                            .attr("width", width + margin.left + margin.right)
-                            .attr("height", height + margin.top + margin.bottom)
-                            .append("g")
-                            .attr("transform",
-                                  "translate(" + margin.left + "," + margin.top + ")");
+		function draw(data) {
+			var data = data["data"];
 
-                      // Add the valueline path.
-                      svg.append("path")
-                          .data([data])
-                          .attr("class", "line")
-                          .attr("d", valueline);
-                      // Add the X Axis
-                      svg.append("g")
-                          .attr("transform", "translate(0," + height + ")")
-                          .call(d3.axisBottom(x));
-                      // Add the Y Axis
-                      svg.append("g")
-                          .call(d3.axisLeft(y));
-                    }
+			// format the data
+			data.forEach(function (d) {
 
-                    draw(voltage_data);
+				d.Time = +d.Time;
+				d.Voltage = +d.Voltage;
+				
+			});
 
-        </script>
+			
 
-	</body>
+			// Scale the range of the data
+			x.domain(d3.extent(data, function (d) { return d.Time; }));
+			y.domain(d3.extent(data, function (d) { return d.Voltage; }));
+
+			d3.select("svg").remove();
+			// append the svg obgect to the body of the page
+			// appends a 'group' element to 'svg'
+			// moves the 'group' element to the top left margin
+			var svg = d3.select("#graph").append("svg")
+				.attr("width", width + margin.left + margin.right)
+				.attr("height", height + margin.top + margin.bottom)
+				.append("g")
+				.attr("transform",
+					"translate(" + margin.left + "," + margin.top + ")");
+
+			// Add the valueline path.
+			svg.append("path")
+				.data([data])
+				.attr("class", "line")
+				.attr("d", valueline);
+			// Add the X Axis
+			svg.append("g")
+				.attr("transform", "translate(0," + height + ")")
+				.call(d3.axisBottom(x));
+			// Add the Y Axis
+			svg.append("g")
+				.call(d3.axisLeft(y));
+		}
+
+		draw(voltage_data);
+
+	</script>
+
+	<script>
+		if (window.tellServer == undefined) {
+			window.tellServer = function (evt, action) {
+				console.log(evt); console.log(action);
+			}
+		}
+	</script>
+	<script type="text/javascript" src="https://code.createjs.com/tweenjs-0.6.1.min.js"></script>
+	<!-- <script type="text/javascript" src="TemplateData/CSSPlugin.js"></script> -->
+	<script src="TemplateData/UnityProgress.js"></script>
+</head>
+
+<body >
+
+		<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" >
+		</canvas>
+
+	<div id="loadingBox">
+		<div id="loadingMsg"></div>
+		<div id="bgBar"></div>
+		<div id="progressBar"></div>
+		<img id="spinner" src="TemplateData/spinner.gif" style="display: none; margin: 0 auto" />
+		<p id="loadingInfo">Loading...</p>
+	</div>
+
+	<script type='text/javascript'>
+		var Module = {
+			TOTAL_MEMORY: 536870912,
+			errorhandler: null,			// arguments: err, url, line. This function must return 'true' if the error is handled, otherwise 'false'
+			compatibilitycheck: null,
+			dataUrl: "Release/NeuronSim.data",
+			codeUrl: "Release/NeuronSim.js",
+			memUrl: "Release/NeuronSim.mem",
+		};
+	</script>
+	<script src="Release/UnityLoader.js"></script>
+
+	
+	
+	<main></main>
+
+	<script src="./dist/main.js"></script>
+
+
+
+</body>
+
 </html>

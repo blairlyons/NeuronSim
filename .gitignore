@@ -1,0 +1,14 @@
+#Folders
+
+.module-cache/
+.sass-cache/
+
+node_modules/
+builds/
+
+
+#Files
+
+.DS_Store
+
+htaccess
